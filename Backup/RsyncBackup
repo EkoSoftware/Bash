@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PARAMETERS="--delete --archive --human-readable --progress"
+SOURCES="$BACKUPDIRS"
+DESTINATION="$BACKUPDRIVE"
+
+
+## Backup ##	
+
+while IFS= read -r line;
+do
+	echo "Backing up $line to $DESTINATION/$line..."
+	rsync ${PARAMETERS} "$line" "$DESTINATION"
+done < $SOURCES
+
+
+
+#rsync --copy-links --delete --archive --human-readable --progress \--exclude='Docker Desktop/Singleton*' --exclude='google-chrome/Singleton*' --exclude='libvirt/storage/autostart/gnome-boxes.xml'  /home/milne/.config/ /media/milne/Backup/.config/

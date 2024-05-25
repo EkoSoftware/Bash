@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ $# != 2 ]; then echo 'Usage: clonetemp REPO TEMPDIR' && exit 1; fi
+
+TDIR=$(mktemp -d /tmp/$1{.XXXXXX})
+git clone git@github.com:EkoSoftware/$2.git $TDIR
+echo $TDIR
+exit 0
+
