@@ -1,19 +1,34 @@
 #!/bin/bash
 set -eu
-PARAMETERS='--progress --update --ignore-existing --links --ignore-errors'
-
-SOURCES=/etc/backup/cloud.txt
-
+CLOUDSTORAGE='drive'
+if [[ $1 == "onedrive" ]]; then
+	echo "$1"
+	CLOUDSTORAGE='onedrive'
+fi
+#SOURCES=/etc/backup/cloud.txt
+SOURCES=~/.config/MyDirectoriesToBackup.txt 
 
 # Backup .config	
 DOTFILES='/home/milne/.config'
-echo "Backing up $DOTFILES to drive:$DOTFILES"
-rclone sync "$DOTFILES" drive:Config $PARAMETERS --exclude=google-chrome/** --exclude=Code/** --exclude=Docker\ Desktop/** 
+echo "Backing up $DOTFILES to $CLOUDSTORAGE:Config"
+rclone sync "$DOTFILES" $CLOUDSTORAGE:Config 	--exclude=google-chrome/** \
+											 	--exclude=Code/** \
+												--exclude=Docker\ Desktop/** \
+												--progress \
+												--update \
+												--ignore-existing \
+												--links \
+												--ignore-errors
 
 # Backup rest
 while read -r line || [ -n "$line" ];
 do
-	echo "Backing up $line to drive:"
-	rclone sync "$line" "drive:$line" $PARAMETERS
+	currentdir=$(echo "$line" | awk -F "/" '{print $4}')
+	echo "Backing up $line to $CLOUDSTORAGE:$currentdir"
+	rclone sync "$line" "$CLOUDSTORAGE:$currentdir" \
+							--progress \
+							--update \
+							--ignore-existing \
+							--links \
+							--ignore-errors
 done < $SOURCES
-
