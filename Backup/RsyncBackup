@@ -1,17 +1,20 @@
 #!/bin/bash
 
-PARAMETERS="--delete --archive --human-readable --progress"
-SOURCES="$BACKUPDIRS"
-DESTINATION="$BACKUPDRIVE"
+SOURCES="$HOME/.config/MyDirectoriesToBackup.txt"
+DESTINATION=$(cat "$HOME/.config/MyBackupDrive.txt")
 
 
 ## Backup ##	
-
 while IFS= read -r line;
 do
-	echo "Backing up $line to $DESTINATION/$line..."
-	rsync ${PARAMETERS} "$line" "$DESTINATION"
-done < $SOURCES
+	echo "Backing up $line to $DESTINATION$line..."
+	rsync "$line" "$DESTINATION" \
+						--delete \
+						--archive \
+						--human-readable \
+						--copy-links \
+						--progress
+done < "$SOURCES"
 
 
 
