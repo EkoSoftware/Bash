@@ -17,6 +17,3 @@ do
 	rclone sync "$line" "drive:$line" $PARAMETERS
 done < $SOURCES
 
-
-
-
