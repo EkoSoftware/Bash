@@ -1,0 +1,22 @@
+#!/bin/bash
+set -eu
+PARAMETERS='--progress --update --ignore-existing --links --ignore-errors'
+
+SOURCES=/etc/backup/cloud.txt
+
+
+# Backup .config	
+DOTFILES='/home/milne/.config'
+echo "Backing up $DOTFILES to drive:$DOTFILES"
+rclone sync "$DOTFILES" drive:Config $PARAMETERS --exclude=google-chrome/** --exclude=Code/** --exclude=Docker\ Desktop/** 
+
+# Backup rest
+while read -r line || [ -n "$line" ];
+do
+	echo "Backing up $line to drive:"
+	rclone sync "$line" "drive:$line" $PARAMETERS
+done < $SOURCES
+
+
+
+
